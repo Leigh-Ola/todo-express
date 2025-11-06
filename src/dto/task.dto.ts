@@ -1,4 +1,4 @@
-import { IsBoolean, IsEnum, IsNotEmpty, IsNumber, IsNumberString, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsEnum, IsNotEmpty, IsNumberString, IsOptional, IsString } from 'class-validator';
 import { sortOrderEnum } from '../utils/types';
 import { Transform } from 'class-transformer';
 

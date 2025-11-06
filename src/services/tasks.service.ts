@@ -9,7 +9,12 @@ function getTaskRepository() {
 }
 
 export async function getAllTasks({
-  order, title, ids, completed, page, limit,
+  order,
+  title,
+  ids,
+  completed,
+  page,
+  limit,
 }: FilterTaskDto): Promise<Partial<Task>[]> {
   // define page and limit defaults
   page = Math.max(Number(page ?? 1), 1); // min page is 1, default is 10
@@ -19,24 +24,24 @@ export async function getAllTasks({
 
   const tasks = await getTaskRepository().find({
     // if sort by specified order or default to ascending
-    ...(order? {order: { id: order }} : {order: { id: 'ASC' }}),
+    ...(order ? { order: { id: order } } : { order: { id: 'ASC' } }),
 
     // partial match for title
-    ...(title? {where: { title: ILike(`%${title}%`) }} : {}),
+    ...(title ? { where: { title: ILike(`%${title}%`) } } : {}),
 
-    ...(ids? {where: { id: In(ids) }} : {}),
+    ...(ids ? { where: { id: In(ids) } } : {}),
 
-    ...(completed? {where: { completed }} : {}),
+    ...(completed ? { where: { completed } } : {}),
 
     take: limit,
     skip,
   });
-  return tasks? tasks.map(sanitizeTask) : [];
+  return tasks ? tasks.map(sanitizeTask) : [];
 }
 
 export async function createTask(
   title: string,
-  completed?: boolean
+  completed?: boolean,
 ): Promise<Partial<Task>> {
   const repository = getTaskRepository();
   const task = repository.create({
@@ -48,7 +53,7 @@ export async function createTask(
 
 export async function updateTask(
   id: number,
-  updates: { title?: string; completed?: boolean }
+  updates: { title?: string; completed?: boolean },
 ): Promise<Partial<Task> | null> {
   const repository = getTaskRepository();
   const task = await repository.findOneBy({ id });
@@ -73,7 +78,9 @@ export async function deleteTask(id: number): Promise<boolean> {
   return (result.affected ?? 0) > 0;
 }
 
-export async function toggleTaskCompleted(id: number): Promise<Partial<Task> | null> {
+export async function toggleTaskCompleted(
+  id: number,
+): Promise<Partial<Task> | null> {
   const repository = getTaskRepository();
   const task = await repository.findOneBy({ id });
   if (!task) {

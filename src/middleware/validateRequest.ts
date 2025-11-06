@@ -57,7 +57,7 @@ export function validateQuery<T extends object>(
     }
 
     // Attach the validated DTO to a new property on the request object
-    (req as any).validatedQuery = dto;
+    (req as Request & { validatedQuery: T }).validatedQuery = dto;
     next();
   };
 }
