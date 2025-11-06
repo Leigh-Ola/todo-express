@@ -23,15 +23,13 @@ export async function getAllTasks({
   const skip = (page - 1) * limit;
 
   const tasks = await getTaskRepository().find({
-    // if sort by specified order or default to ascending
-    ...(order ? { order: { id: order } } : { order: { id: 'ASC' } }),
-
     // partial match for title
     ...(title ? { where: { title: ILike(`%${title}%`) } } : {}),
-
     ...(ids ? { where: { id: In(ids) } } : {}),
-
     ...(completed ? { where: { completed } } : {}),
+    
+    // sort by specified createdAt order or default to ascending
+    ...(order ? { order: { createdAt: order } } : { order: { createdAt: 'ASC' } }),
 
     take: limit,
     skip,
